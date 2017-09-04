@@ -187,6 +187,9 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[], s
 		
 		// initialize the weight to 1.0
 		double w = 1.0;
+		double numerator_I = (1 / (2*(std_x * std_x)));
+		double numerator_II = (1 / (2*(std_y * std_y)));
+		double denom = sqrt( 2.0 * M_PI * std_x * std_y);
 
 		for (int j = 0; j < transformed_coords.size(); j++){
 
@@ -200,9 +203,9 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[], s
 			double d_x = x_o - predicted_x;
 			double d_y = y_o - predicted_y;
 
-			double a = (1 / (2*(std_x * std_x))) * d_x * d_x;
-			double b = (1 / (2*(std_y * std_y))) * d_y * d_y;
-			double exponential = exp(-(a + b)) / sqrt( 2.0 * M_PI * std_x * std_y);
+			double a = numerator_I * d_x * d_x;
+			double b = numerator_II * d_y * d_y;
+			double exponential = exp(-(a + b)) / denom;
 
 			w *= exponential;
 		}
